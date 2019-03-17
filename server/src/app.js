@@ -15,6 +15,8 @@ require('./userPassport')
 
 require('./routes')(app)
 
+app.use('/assets', express.static('public'))
+
 app.get('/status', function (req, res ){
   res.send('Hello nodejs server')
 })
