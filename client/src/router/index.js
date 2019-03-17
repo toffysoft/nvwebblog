@@ -7,12 +7,23 @@ import UserCreate from '@/components/Users/CreateUser'
 import UserEdit from '@/components/Users/EditUser'
 import UserShow from '@/components/Users/ShowUser'
 
+// Authen
+import Login from '@/components/Login'
+
 
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    // authen
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+
+    // user
     {
       path: '/users',
       name: 'users',
