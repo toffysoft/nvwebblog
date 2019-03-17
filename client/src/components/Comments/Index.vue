@@ -1,7 +1,6 @@
 <template>
   <div>
     <h2>Get all comments</h2>
-    <p><button v-on:click="logout">Logout</button></p>
     <h4>จำนวน comment {{comments.length}}</h4>
     <div v-for="comment in comments" v-bind:key="comment.id">
       <p>id: {{ comment.id }}</p>
@@ -28,13 +27,6 @@
     this.comments = (await CommentsService.index()).data
   },
   methods: {
-    logout () {
-      this.$store.dispatch('setToken', null)
-      this.$store.dispatch('setComment', null)
-      this.$router.push({
-        name: 'login'
-      })
-    },
     navigateTo (route) {
       this.$router.push(route)
     },
