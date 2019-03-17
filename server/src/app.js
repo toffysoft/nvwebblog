@@ -5,7 +5,7 @@ app.get('/status', function (req, res) {
   res.send('Hello node js server')
 })
 
-let port = 8080
+let port = 8081
 
 app.listen(port, function () {
   console.log(`server running on ${port}`)
