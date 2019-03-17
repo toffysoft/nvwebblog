@@ -1,7 +1,12 @@
 <template>
   <div>    
     <div class="blog-header">
-      <h2>ส่วนจัดการบล็อก</h2>          
+      <h2>ส่วนจัดการบล็อก</h2> 
+      <div>
+        <form>
+          <input type="text" v-model="search" placeholder="Search">
+        </form>
+      </div>           
       <div>
         <button v-on:click="navigateTo('/blog/create')">create blog</button>        
         <strong> จำนวน blog: </strong> {{blogs.length}}</div>
@@ -38,12 +43,37 @@
 </template>
 <script>
 import BlogsService from '@/services/BlogsService'
+import _ from 'lodash'
 
 export default {
 data () {
   return {
     blogs: [],
     BASE_URL: "http://localhost:8081/assets/uploads/",
+    search: '',
+  }
+},
+watch: {  
+  search: _.debounce(async function (value) {
+    const route = {
+      name: 'blogs'
+    }
+
+    if(this.search !== '') {
+      route.query = {
+        search: this.search
+      }
+    }
+
+    console.log('search: ' + this.search)
+    this.$router.push(route)
+  }, 700),
+
+  '$route.query.search': {
+    immediate: true,
+    async handler (value) {                     
+      this.blogs = (await BlogsService.index(value)).data                  
+    }
   }
 },
 async created () {
