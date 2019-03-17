@@ -3,9 +3,11 @@
     <h1>Create Blog</h1>
     <form v-on:submit.prevent = "createBlog">
       <p>title: <input type="text" v-model="blog.title"></p>
-      <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
-        <img :src="BASE_URL+blog.thumbnail" alt="thumbnail">
-      </div>
+      <transition name="fade">
+        <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
+          <img :src="BASE_URL+blog.thumbnail" alt="thumbnail">
+        </div>
+      </transition>
       <form enctype="multipart/form-data" novalidate>
         <div class="dropbox">
           <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
@@ -23,14 +25,14 @@
         </div>
       </form>
       <div>
-        <ul class="pictures">
+        <transition-group tag="ul" name="fade" class="pictures">        
           <li v-for="picture in pictures" v-bind:key="picture.id">              
             <img style="margin-bottom:5px;" :src="BASE_URL+picture.name" alt="picture image">              
             <br />            
             <button v-on:click.prevent="delFile(picture)">Delete</button>
             <button v-on:click.prevent="useThumbnail(picture.name)">Thumbnail</button>
           </li>
-        </ul>
+        </transition-group>
         <div class="clearfix"></div>
       </div>  
       <p><strong>content: </strong></p>
@@ -57,7 +59,7 @@ export default {
       blog: {
         title: '',
         thumbnail: 'null',
-        pictures: 'null',
+        pictures: [],
         content: '',
         category: '',
         status: 'saved'
