@@ -1,1 +1,2 @@
-require('./sayHello')
+let sayHello = require('./sayHello')
+sayHello()
