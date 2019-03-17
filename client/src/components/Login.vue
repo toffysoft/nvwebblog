@@ -5,6 +5,7 @@
       <p>Username: <input type="text" v-model="email" /></p>
       <p>Password: <input type="password" v-model="password" /></p>
       <p><button type="submit">Login</button></p>
+      <div class="error" v-if="error">{{error}}</div>
     </form>
   </div>
  </template>
@@ -16,7 +17,8 @@
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      error: null
     }
   },
   methods: {
@@ -30,12 +32,25 @@
         this.$store.dispatch('setToken', response.data.token)
         this.$store.dispatch('setUser', response.data.user)
 
+        this.$router.push({
+          name: 'users'
+        })
+
         console.log(response)
        
       } catch (error) {
-        console.log(error)       
+        console.log(error)   
+        this.error = error.response.data.error
+        this.email = ''
+        this.password = ''     
       }
     }
   }
  }
  </script>
+<style lang="postcss" scoped>
+.error {
+  color:red;
+}
+
+</style>
