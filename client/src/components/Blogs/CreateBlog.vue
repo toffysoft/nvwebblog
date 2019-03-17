@@ -23,6 +23,8 @@
         <ul class="pictures">
           <li v-for="picture in pictures" v-bind:key="picture.id">              
             <img style="margin-bottom:5px;" :src="BASE_URL+picture.name" alt="picture image">              
+            <br />            
+            <button v-on:click.prevent="delFile(picture)">Delete</button>
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -74,6 +76,24 @@ export default {
     }
   },
   methods: {// upload
+    async delFile (material){
+      let result = confirm("Want to delete?")
+      if (result) {
+        let dataJSON = {
+          "filename":material.name
+        }
+        
+        await UploadService.delete(dataJSON)      
+
+        for (var i=0;i<this.pictures.length;i++){
+          if(this.pictures[i].id === material.id) {
+            this.pictures.splice(i, 1)
+            this.materialIndex--
+            break
+          }
+        }    
+      } 
+    },
     wait(ms) {
       return x => {
         return new Promise(resolve => setTimeout(() => resolve(x), ms));
