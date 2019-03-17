@@ -1,14 +1,19 @@
 <template>
-  <div>
+  <div class="container blog-wrapper">
+    <main-header navsel="back"></main-header>
     <h1>Edit Blog</h1>
-    <form v-on:submit.prevent = "editBlog">
-      <p>title: <input type="text" v-model="blog.title"></p>
+    <form v-on:submit.prevent = "editBlog" >
+      <!-- <p>title: <input type="text" v-model="blog.title"></p> -->
+      <p>
+        <label for="" class="control-label">Title: </label>
+        <input type="text" v-model="blog.title" class="form-control">        
+      </p>
       <transition name="fade">
         <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
-          <img :src="BASE_URL+blog.thumbnail" alt="thumbnail">
+          <img class="img-thumbnail" :src="BASE_URL+blog.thumbnail" alt="thumbnail">
         </div>
-      </transition>
-      <form id="upload-form" enctype="multipart/form-data" novalidate >
+      </transition>  
+      <form id="upload-form" enctype="multipart/form-data" novalidate>
         <div class="dropbox">
           <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
             accept="image/*" class="input-file">
@@ -23,26 +28,31 @@
               Upload Successful.
             </p>        
         </div>
-      </form>   
+      </form>
       <div>
-        <transition-group tag="ul" name="fade" class="pictures">        
-          <li v-for="picture in pictures" v-bind:key="picture.id">              
-            <img style="margin-bottom:5px;" :src="BASE_URL+picture.name" alt="picture image">              
-            <br />            
-            <button v-on:click.prevent="delFile(picture)">Delete</button>
-            <button v-on:click.prevent="useThumbnail(picture.name)">Thumbnail</button>
-          </li>
-        </transition-group>
-        <div class="clearfix"></div>
-      </div>     
+      <transition-group tag="ul" name="fade" class="pictures">        
+        <li v-for="picture in pictures" v-bind:key="picture.id">              
+          <img class="img-thumbnail" style="margin-bottom:5px;" :src="BASE_URL+picture.name" alt="picture image">              
+          <br />  
+          <button class="btn btn-xs btn-info" v-on:click.prevent="useThumbnail(picture.name)">Thumbnail</button>
+          <button class="btn btn-xs btn-danger" v-on:click.prevent="delFile(picture)">Delete</button>
+        </li>        
+      </transition-group>
+      <div class="clearfix"></div>
+      </div>  
       <p><strong>content: </strong></p>
-      <p><vue-ckeditor v-model.lazy="blog.content" :config="config" @blur="onBlur($event)" @focus="onFocus($event)" /></p>
-      <p>category: <input type="text" v-model="blog.category"></p>      
+      <p><vue-ckeditor v-model.lazy="blog.content" :config="config" @blur="onBlur($event)" @focus="onFocus($event)" /></p>            
       <p>
-        <button type="submit">update blog</button>
-        <button v-on:click="navigateTo('/blogs')">กลับ</button>
-      </p>
-    </form>  
+        <label class="control-label">Category :</label>
+        <input type="text" v-model="blog.category" class="form-control">
+      </p>            
+      <p>
+        <button class="btn btn-warning" type="submit">Update Blog</button>
+        <button class="btn btn-default" type="button" v-on:click="navigateTo('/blogs')">Back</button>
+      </p>      
+      
+    </form>   
+    <br>    
   </div>
 </template>
 <script>
@@ -62,7 +72,7 @@ export default {
       blog: {
         title: '',
         thumbnail: 'null',
-        pictures: [],
+        pictures: 'null',
         content: '',
         category: '',
         status: ''
@@ -90,6 +100,9 @@ export default {
     }
   },
   methods: {
+    navigateTo (route) {
+      this.$router.push(route)
+    },
     // ckedior ()
     onBlur(editor) {
       console.log(editor);
@@ -217,18 +230,19 @@ export default {
       return this.currentStatus === STATUS_FAILED;
     }
   },
+
   async mounted () {
     try {      
       let blogId = this.$route.params.blogId
-      this.blog = (await BlogsService.show(blogId)).data       
+      this.blog = (await BlogsService.show(blogId)).data 
       this.pictures = JSON.parse(this.blog.pictures)
-      this.pictureIndex = this.pictures.length      
     } catch (error) {
       console.log (error)
     }
   },
   
   created () {    
+
     this.reset()
 
     this.config.toolbar = [
@@ -338,14 +352,40 @@ export default {
   components: { 
     VueCkeditor 
   },
-} 
+}
 </script>
 <style scoped>
+.blog-wrapper {
+  margin-top:80px;
+}
+
 /* thumbnail */
 .thumbnail-pic img{
   width:200px;
+  margin-bottom: 10px;
+}
+/* display uploaded pic */
+ul.pictures {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
+ul.pictures li {
+  float: left;
+}
+
+ul.pictures li img {
+  max-width: 180px;
+  margin-right: 20px;
+}
+
+.clearfix {
+  clear: both;
+}
 /* uplaod */
 .dropbox {
   outline: 2px dashed grey; /* the dash box */
@@ -374,28 +414,5 @@ export default {
   font-size: 1.2em;
   text-align: center;
   padding: 50px 0;
-}
-
-/* display uplaod */
-ul.pictures {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  float: left;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-ul.pictures li {
-  float: left;
-}
-
-ul.pictures li img {
-  max-width: 180px;
-  margin-right: 20px;
-}
-
-.clearfix {
-  clear: both;
 }
 </style>

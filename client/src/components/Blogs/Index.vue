@@ -1,14 +1,19 @@
 <template>
-  <div>    
+  <div class="container">    
     <div class="blog-header">
       <h2>ส่วนจัดการบล็อก</h2> 
-      <div>
-        <form>
-          <input type="text" v-model="search" placeholder="Search">
+       <div>
+        <form class="form-inline form-search">
+          <div class="form-group">              
+            <div class="input-group">                        
+            <input type="text" v-model="search" class="form-control" id="exampleInputAmount" placeholder="Search">
+            <div class="input-group-addon"><i class="fas fa-search"></i></div>
+            </div>
+          </div>                
         </form>
-      </div>           
-      <div>
-        <button v-on:click="navigateTo('/blog/create')">create blog</button>        
+      </div>             
+      <div class="create-blog">
+        <button class="btn btn-success btn-sm" v-on:click="navigateTo('/blog/create')"><i class="fas fa-file"></i> Create blog</button>        
         <strong> จำนวน blog: </strong> {{results.length}}
       </div>
       <ul class="categories"> 
@@ -33,11 +38,10 @@
           <p><strong>Category:</strong> {{ blog.category }}</p>
           <p><strong>Create:</strong> {{ blog.createdAt }}</p>
           <!-- <p>status: {{ blog.status }}</p> -->
-
           <p>
-            <button v-on:click="navigateTo('/blog/'+ blog.id)">ดู blog</button> 
-            <button v-on:click="navigateTo('/blog/edit/'+ blog.id)">แก้ไข blog</button>
-            <button v-on:click="deleteBlog(blog)">ลบข้อมูล</button>
+            <button class="btn btn-sm btn-info" v-on:click="navigateTo('/blog/'+ blog.id)"><i class="fab fa-readme"></i> View Blog</button> 
+            <button class="btn btn-sm btn-warning" v-on:click="navigateTo('/blog/edit/'+ blog.id)"><i class="fas fa-edit"></i> Edit Blog</button>
+            <button class="btn btn-sm btn-danger" v-on:click="deleteBlog(blog)"><i class="fas fa-trash-alt"></i> Delete</button>
           </p>
         </div>
         <div class="clearfix"></div>      
@@ -162,7 +166,60 @@ methods: {
 }
 </script>
 <style scoped>
+.empty-blog {
+  width: 100%;
+  text-align: center;
+  padding:10px;
+  background:darksalmon;
+  color:white;
+}
+
+/* thumbnail */
+.thumbnail-pic img{
+  width: 200px;
+  padding: 5px 5px 5px 5px;
+  border: solid 1px #ccc;
+  margin: 10px 10px 0px 0px;
+}
+
+.blog-info {
+  float: left;
+}
+
+.blog-pic {
+  float: left;
+}
+
+.clearfix {
+  clear: both;
+}
+
+.blog-list {
+  border:solid 1px #dfdfdf;
+  margin-bottom: 10px;
+  padding: 5px;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+}
+
+.blog-header {
+  margin-top: 80px;  
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#blog-list-bottom{
+  padding-top:4px;
+}
+
+.blog-load-finished{
+  padding:4px;
+  text-align: center;
+  background: seagreen;
+  color:white;
+}
+
 .categories {
+  margin-top: 10px;
   padding: 0;
   list-style: none;
   float: left;
@@ -185,58 +242,7 @@ methods: {
   color: white
 }
 
-.empty-blog {
-  width: 100%;
-  text-align: center;
-  padding:10px;
-  background:darksalmon;
-  color:white;
+.create-blog {
+  margin-top: 10px;
 }
-
-/* thumbnail */
-.thumbnail-pic img{
-  width: 200px;
-  padding: 5px 10px 0px 0px;
-}
-
-.blog-info {
-  float: left;
-}
-
-.blog-pic {
-  float: left;
-}
-
-.clearfix {
-  clear: both;
-}
-
-.blog-list {
-  border:solid 1px #dfdfdf;
-  margin-bottom: 10px;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 5px;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
-}
-
-.blog-header {
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#blog-list-bottom{
-  padding-top:4px;
-}
-
-.blog-load-finished{
-  padding:4px;
-  text-align: center;
-  background: seagreen;
-  color:white;
-}
-
-
 </style>
