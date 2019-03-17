@@ -4,13 +4,12 @@
   </div>
 </template>
 <script>
+import UsersService from '@/services/UsersService'
+
 export default {
-  created () {
-    this.$http.get('http://localhost:8081/users')
-        .then(function (response) {
-          console.log(response)
-        })
-      
+  async created () {
+    let results = (await UsersService.index()).data
+    console.log(results)
   }
 }
 </script>
