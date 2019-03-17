@@ -9,38 +9,45 @@
       </div>           
       <div>
         <button v-on:click="navigateTo('/blog/create')">create blog</button>        
-        <strong> จำนวน blog: </strong> {{blogs.length}}</div>
-      <br>
-    </div>
-    <div v-if="blogs.length === 0" class="empty-blog">
+        <strong> จำนวน blog: </strong> {{results.length}}
+      </div>
+      <ul class="categories"> 
+        <li v-for="cate in category" v-bind:key="cate.index"><a v-on:click.prevent="setCategory(cate)" href="#">{{ cate }}</a></li>
+        <li class="clear" ><a v-on:click.prevent="setCategory(' ')" href="#">Clear</a></li>
+      </ul>
+      <div class="clearfix"></div>   
+    </div>    
+    <transition-group name="fade">
+      <div v-for="blog in blogs" v-bind:key="blog.id" class="blog-list">
+        <!-- <p>id: {{ blog.id }}</p> -->
+        <div class="blog-pic">
+          <transition name="fade">
+            <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
+              <img :src="BASE_URL+blog.thumbnail" alt="thumbnail">
+            </div>
+          </transition>  
+        </div>
+        <h3>{{ blog.title }}</h3>
+        <div v-html="blog.content.slice(0,200) + '...'"></div>      
+        <div class="blog-info">
+          <p><strong>Category:</strong> {{ blog.category }}</p>
+          <p><strong>Create:</strong> {{ blog.createdAt }}</p>
+          <!-- <p>status: {{ blog.status }}</p> -->
+
+          <p>
+            <button v-on:click="navigateTo('/blog/'+ blog.id)">ดู blog</button> 
+            <button v-on:click="navigateTo('/blog/edit/'+ blog.id)">แก้ไข blog</button>
+            <button v-on:click="deleteBlog(blog)">ลบข้อมูล</button>
+          </p>
+        </div>
+        <div class="clearfix"></div>      
+      </div>
+    </transition-group>
+    <div v-if="blogs.length === 0 && loading === false" class="empty-blog">
         *** ไม่มีข้อมูล ***
     </div>
-    <div v-for="blog in blogs" v-bind:key="blog.id" class="blog-list">
-      <!-- <p>id: {{ blog.id }}</p> -->
-      <div class="blog-pic">
-        <transition name="fade">
-          <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
-            <img :src="BASE_URL+blog.thumbnail" alt="thumbnail">
-          </div>
-        </transition>  
-      </div>
-      <h3>{{ blog.title }}</h3>
-      <div v-html="blog.content.slice(0,200) + '...'"></div>      
-      <div class="blog-info">
-        <p><strong>Category:</strong> {{ blog.category }}</p>
-        <p><strong>Create:</strong> {{ blog.createdAt }}</p>
-        <!-- <p>status: {{ blog.status }}</p> -->
-
-        <p>
-          <button v-on:click="navigateTo('/blog/'+ blog.id)">ดู blog</button> 
-          <button v-on:click="navigateTo('/blog/edit/'+ blog.id)">แก้ไข blog</button>
-          <button v-on:click="deleteBlog(blog)">ลบข้อมูล</button>
-        </p>
-      </div>
-      <div class="clearfix"></div>      
-    </div>
     <div id="blog-list-bottom">
-      <div v-if="blogs.length === results.length && results.length > 0">โหลดข้อมูลครบแล้ว</div>
+      <div class="blog-load-finished" v-if="blogs.length === results.length && results.length > 0">โหลดข้อมูลครบแล้ว</div>
     </div>
   </div>
 </template>
@@ -58,7 +65,9 @@ data () {
     blogs: [],
     BASE_URL: "http://localhost:8081/assets/uploads/",
     search: '',
-    results: []
+    results: [],
+    category: [],
+    loading: false,
   }
 },
 watch: {  
@@ -79,12 +88,28 @@ watch: {
 
   '$route.query.search': {
     immediate: true,
-    async handler (value) {                     
+    async handler (value) {            
       this.blogs = []
-      this.results = []          
+      this.results = []      
+      this.loading = true    
       this.results = (await BlogsService.index(value)).data       
-      this.appendResults()              
-    }
+      this.appendResults()
+
+      this.results.forEach(blog => {       
+        if (this.category.length > 0) {
+          // console.log(this.category.indexOf(blog.category))
+          if(this.category.indexOf(blog.category) === -1) {
+            this.category.push(blog.category)
+          }
+        } else {
+          
+          this.category.push(blog.category)
+        }
+      })  
+      this.loading = false
+      this.search = value
+      // console.log(this.category)              
+    }       
   }
 },
 updated () {
@@ -99,6 +124,14 @@ beforeUpdated () {
   }
 },
 methods: {
+  setCategory (keyword) {  
+    if(keyword === ' '){        
+      this.search = ''      
+      console.log('null')  
+    } else {
+      this.search = keyword      
+    }         
+  },
   appendResults: function () {
     if (this.blogs.length < this.results.length) {
       let toAppend = this.results.slice(
@@ -129,6 +162,29 @@ methods: {
 }
 </script>
 <style scoped>
+.categories {
+  padding: 0;
+  list-style: none;
+  float: left;
+}
+
+.categories li {
+  float: left;
+  padding: 2px;
+}
+
+.categories li a {
+  padding: 5px 10px 5px 10px;
+  background:paleturquoise; 
+  color: black;
+  text-decoration: none;
+}
+
+.categories li.clear a {
+  background: tomato;
+  color: white
+}
+
 .empty-blog {
   width: 100%;
   text-align: center;
@@ -172,6 +228,10 @@ methods: {
 }
 
 #blog-list-bottom{
+  padding-top:4px;
+}
+
+.blog-load-finished{
   padding:4px;
   text-align: center;
   background: seagreen;
