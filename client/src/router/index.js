@@ -29,7 +29,7 @@ export default new Router({
       component: UserEdit
     },
     {
-      path: '/user',
+      path: '/user/:userId',
       name: 'user',
       component: UserShow
     },    
