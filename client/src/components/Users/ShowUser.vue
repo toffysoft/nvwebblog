@@ -17,9 +17,14 @@ export default {
     }
   },
   async created () {
-    let userId = this.$route.params.userId
-    this.user = (await UsersService.show(userId)).data
+    try {
+      let userId = this.$route.params.userId
+      this.user = (await UsersService.show(userId)).data
+    } catch (error) {
+      console.log (error)
+    }  
   }
+
 }
 </script>
 <style scoped>
