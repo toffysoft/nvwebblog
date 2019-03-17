@@ -1,12 +1,13 @@
 <template>
   <div>
     <h1>Get All Users</h1>
-    <div v-if="users.length">
+    <div v-for="user in users" v-bind:key="user.id">
       <div>จำนวนผู้ใช้งาน {{ users.length }}</div>
       <div>id: {{ users[0].id }}</div>
       <div>ชื่อ-นามสกุล: {{ users[0].name }} - {{ users[0].lastname }}</div>
       <div>email: {{ users[0].email }}</div>
       <div>password: {{ users[0].password }}</div>
+      <hr>
     </div>
   </div>
 </template>
