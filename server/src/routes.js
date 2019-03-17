@@ -2,18 +2,46 @@ const UserController = require('./controllers/UserController')
 const UserAuthenController = require('./controllers/UserAuthenController')
 const isAuthenController = require('./authen/isAuthenController')
 const BlogController = require('./controllers/BlogController')
+const CommentController = require('./controllers/CommentController')
 
 
 module.exports = (app) => {
+  // comment route
+ // create comment
+  app.post('/comment',
+    CommentController.create
+  )
+
+  // edit comment, suspend, active
+  app.put('/comment/:commentId',
+    CommentController.put
+  )
+
+  // delete comment
+  app.delete('/comment/:commentId',
+    CommentController.remove
+  )
+
+  // get comment by id
+  app.get('/comment/:commentId',
+    CommentController.show
+  )
+
+  // get all comment
+  app.get('/comments',
+    CommentController.index   
+  )
+
+
   // blog route
   // create blog
   app.post('/blog',
-  BlogController.create
+    BlogController.create
   )
 
   // edit blog, suspend, active
   app.put('/blog/:blogId',
-  BlogController.put
+    BlogController.put
   )
 
   // delete blog
@@ -23,12 +51,12 @@ module.exports = (app) => {
 
   // get blog by id
   app.get('/blog/:blogId',
-  BlogController.show
+    BlogController.show
   )
 
   // get all blog
   app.get('/blogs',
-  BlogController.index   
+    BlogController.index   
   )
 
   // authen
