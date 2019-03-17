@@ -7,9 +7,14 @@ import VueResource from 'vue-resource'
 import { sync } from 'vuex-router-sync'
 import store from './store'
 
+// components
+import BackHeader from '@/components/Header.vue'
+
+
 Vue.config.productionTip = false
 
 Vue.use(VueResource)
+Vue.component('back-header', BackHeader)
 
 sync(store, router)
 

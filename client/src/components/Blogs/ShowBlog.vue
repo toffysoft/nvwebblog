@@ -1,0 +1,5 @@
+<template>
+  <div>
+    <h1>Show Blog</h1>
+  </div>
+</template>
