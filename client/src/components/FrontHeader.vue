@@ -22,10 +22,28 @@
         </div>        
       </div>
     </div>
+    <div class="login-wrapper">
+      <form v-on:submit.prevent="clientLogin">
+        <p>Email: <input type="text" v-model="email"> </p>
+        <p>Password: <input type="text" v-model="password"> </p>
+        <p><button type="submit">Login</button></p>
+      </form>
+        <div class="error">
+        <p v-if="error">{{error}}</p>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+import AuthenService from '@/services/AuthenService'
 export default {
+  data () {
+    return {
+      email: '',
+      password: '',
+      error: ''
+    }
+  },
   methods: {
     logout () {
       this.$store.dispatch('setToken', null)
@@ -34,10 +52,31 @@ export default {
         name: 'login'
       })
     },
+    async clientLogin () {
+      console.log(`acc: ${this.email} -${this.password}`)
+      try {
+        const response = await AuthenService.clientLogin({
+          email: this.email,
+          password: this.password
+        })
+
+        this.error = ''
+
+        this.$store.dispatch('setToken', response.data.token)
+        this.$store.dispatch('setUser', response.data.user)
+      } catch (error) {
+        console.log(error)      
+        this.error = error.response.data.error  
+      }
+    },
+
   }
 }
 </script>
 <style scoped>
+.login-wrapper {
+  margin-top: 80px;
+}
 .navbar-brand > img {
   width: 36px;
   padding: 12px 0;

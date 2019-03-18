@@ -16,11 +16,7 @@
       <p>status: {{ blog.status }}</p> -->    
     </div>
     <div class="back-nav"><button class="btn btn-success" v-on:click="navigateTo('/front')"><i class="fas fa-arrow-left"></i> Back..</button></div>
-    <transition name="fade">
-      <div v-if="resultUpdated != ''" class="popup-msg">      
-        <p>{{ resultUpdated }}</p>
-      </div>
-    </transition>
+    
     <br>
   </div>
 </template>
@@ -34,7 +30,9 @@ export default {
     return {
       blog: null,
       resultUpdated: '',
-      users:null
+      users:null,
+      comment: null,
+      comments: '',
     }
   },
   delete () {
@@ -55,22 +53,47 @@ export default {
     navigateTo (route) {
       this.$router.push(route)
     },
+    async sendComment () {
+      // console.log(`comment: ${this.comment}`)
+      try {
+        let comment = {
+          blogId:this.blog.id,
+          comment:this.comment,
+          userId:this.user.id
+        }
+
+        // console.log(comment)
+        await CommentsService.post(comment)
+        // reload comments      
+      } catch (err) {
+        console.log(err)
+      }
+
+      // reload comment
+      this.reloadComment()
+    },
+    async reloadComment () {
+      try {
+        this.comments = (await CommentsService.blog(this.blog.id)).data      
+      } catch (error) {
+        console.log (error)
+      } 
+    }
   }
 }
 </script>
 <style scoped>
-.popup-msg {
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
-  border: solid 1px #ddd;
-  background: #fff;
-  max-width:200px;
-  padding: 10px;
-  position:fixed;
-  bottom:0;
-  right:0;  
-  border-radius: 5px;
-  margin-bottom: 5px;
-  margin-right:  5px;
+.comment-list {
+  list-style: none;  
+  padding : 0;
+  margin : 0;
+}
+
+.comment-form-wrapper {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
 }
 
 .hero {

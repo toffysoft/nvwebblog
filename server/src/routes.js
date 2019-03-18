@@ -110,6 +110,9 @@ module.exports = (app) => {
   app.post('/login', 
       UserAuthenController.login
   )
+  app.post('/front/login', 
+      UserAuthenController.clientLogin
+  )
 
   // users
   // create user
