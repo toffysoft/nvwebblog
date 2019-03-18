@@ -17,10 +17,12 @@
           <ul class="nav navbar-nav navbar-right">
             <li role="presentation"><router-link :to="{name: 'front'}" ><i class="fas fa-home"></i> Home</router-link></li>        
             <li v-if="!isUserLoggedIn" role="presentation"><a href="#" v-on:click.prevent="showLogin = true" >Login</a></li>
+            <li v-if="!isUserLoggedIn" role="presentation"><a href="#" v-on:click.prevent="showRegister = true" >Register</a></li>
             <transition name="fade">
+            <li v-if="isUserLoggedIn" role="presentation"><a href="#">{{user.name}}</a></li>
             <li v-if="isUserLoggedIn" role="presentation"><router-link v-bind:to="{name: 'login'}" >{{user.name}}</router-link></li>
             </transition>
-            <li role="presentation"><a href="#" v-on:click.prevent="logout">Logout</a></li>
+            <li v-if="isUserLoggedIn" role="presentation"><a href="#" v-on:click.prevent="logout">Logout</a></li>
           </ul>
         </div>        
       </div>
@@ -33,19 +35,61 @@
             <div class="form-group">
               <label class="control-label col-md-3">Email:</label>
               <div class="col-md-9">
-                <input placeholder="email" type="email" v-model="email" class="form-control" />
+                <input required placeholder="email" type="email" v-model="email" class="form-control" />
               </div>
             </div>
             <div class="form-group">
               <label class="control-label col-md-3">Password:</label>
               <div class="col-md-9">
-                <input type="password" placeholder="password" v-model="password" class="form-control" />
+                <input required type="password" placeholder="password" v-model="password" class="form-control" />
               </div>
             </div>
             <div class="form-group">
               <div class="col-md-offset-3 col-md-9">                    
                 <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-key"></i> Login</button>
                 <button v-on:click.prevent="showLogin = false" class="btn btn-danger btn-sm" type="button"><i class="fas fa-times-circle"></i> Close</button>
+              </div>
+            </div>
+            <div class="error">
+              <div v-html="error" v-if="error"></div>
+            </div>
+          </form>
+        </div> 
+      </transition> 
+    </div> 
+    <div class="modal" v-if="showRegister"> 
+      <transition name="fade">
+        <div class="login-wrapper">
+          <h3>Client Register</h3>
+          <form v-on:submit.prevent="clientRegister" class="form-horizontal">
+            <div class="form-group">
+              <label class="control-label col-md-3">Email:</label>
+              <div class="col-md-9">
+                <input required placeholder="email" type="email" v-model="client.email" class="form-control" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-md-3">Password:</label>
+              <div class="col-md-9">
+                <input required type="password" placeholder="password" v-model="client.password" class="form-control" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-md-3">Name:</label>
+              <div class="col-md-9">
+                <input required type="text" placeholder="name" v-model="client.name" class="form-control" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-md-3">Lastname:</label>
+              <div class="col-md-9">
+                <input required type="text" placeholder="lastname" v-model="client.lastname" class="form-control" />
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-md-offset-3 col-md-9">                    
+                <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-key"></i> Register</button>
+                <button v-on:click.prevent="showRegister = false" class="btn btn-danger btn-sm" type="button"><i class="fas fa-times-circle"></i> Close</button>
               </div>
             </div>
             <div class="error">
@@ -65,6 +109,7 @@
 <script>
 import {mapState} from 'vuex'
 import AuthenService from '@/services/AuthenService'
+import UsersService from '@/services/UsersService'
 
 export default {
   data () {
@@ -73,7 +118,16 @@ export default {
       password: '',
       error: '',
       showLogin: false,
-      resultUpdated: ''
+      showRegister: false,
+      resultUpdated: '',
+      client: {
+        name: '',
+        lastname: '',
+        email: '',
+        password: '',
+        status: 'active',
+        type: 'user'
+      }   
     }
   },
   computed: {
@@ -90,7 +144,22 @@ export default {
       //   name: 'login'
       // })
       this.resultUpdated = "Logout successful."
-      setTimeout(() => this.resultUpdated = '', 3000)
+      setTimeout(() => this.resultUpdated = '', 5000)
+    },
+    async clientRegister () {
+      console.log(this.client)
+      try {
+        await UsersService.post(this.client)   
+        this.client = {}   
+        this.showRegister = false
+        this.resultUpdated = "Register successful, Please login first."
+        setTimeout(() => this.resultUpdated = '', 5000) 
+      } catch (error) {
+        console.log(error)
+        this.client = {}
+        this.error = error.response.data.error
+        setTimeout(() => this.error = '', 5000)
+      }
     },
     async clientLogin () {
       console.log(`acc: ${this.email} -${this.password}`)
@@ -113,7 +182,7 @@ export default {
         this.password = '',
         this.showLogin = false
         this.resultUpdated = "Login successful."
-        setTimeout(() => this.resultUpdated = '', 3000)
+        setTimeout(() => this.resultUpdated = '', 5000)
 
         
       } catch (error) {
@@ -121,7 +190,7 @@ export default {
         this.error = error.response.data.error
         this.email = ''
         this.password = ''  
-        setTimeout(() => this.error = '', 3000)
+        setTimeout(() => this.error = '', 5000)
       }
     },
   }

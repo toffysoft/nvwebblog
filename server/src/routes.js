@@ -1,8 +1,11 @@
 const UserController = require('./controllers/UserController')
 const UserAuthenController = require('./controllers/UserAuthenController')
-const isAuthenController = require('./authen/isAuthenController')
 const BlogController = require('./controllers/BlogController')
 const CommentController = require('./controllers/CommentController')
+
+
+// authen
+const isAuthenController = require('./authen/isAuthenController')
 
 let multer = require("multer")
 
