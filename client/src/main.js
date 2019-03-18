@@ -9,12 +9,14 @@ import store from './store'
 
 // components
 import BackHeader from '@/components/Header.vue'
+import FrontHeader from '@/components/FrontHeader.vue'
 
 
 Vue.config.productionTip = false
 
 Vue.use(VueResource)
 Vue.component('back-header', BackHeader)
+Vue.component('front-header', FrontHeader)
 
 sync(store, router)
 

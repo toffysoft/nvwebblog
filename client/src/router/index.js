@@ -22,12 +22,22 @@ import BlogShow from '@/components/Blogs/ShowBlog'
 // Upload Testing
 import Upload from '@/components/Utils/Upload'
 
+// Front
+import FrontIndex from '@/components/Fronts/Index'
+
 
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   routes: [
+    // front
+    {
+      path: '/front',
+      name: 'front',
+      component: FrontIndex
+    },
+    
     // upload testing
     {
       path: '/upload',
