@@ -8,15 +8,12 @@ import { sync } from 'vuex-router-sync'
 import store from './store'
 
 // components
-import BackHeader from '@/components/Header.vue'
-import FrontHeader from '@/components/FrontHeader.vue'
-
+import MainHeader from '@/components/Header.vue'
 
 Vue.config.productionTip = false
 
 Vue.use(VueResource)
-Vue.component('back-header', BackHeader)
-Vue.component('front-header', FrontHeader)
+Vue.component('main-header', MainHeader)
 
 sync(store, router)
 

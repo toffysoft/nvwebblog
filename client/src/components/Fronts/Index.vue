@@ -1,6 +1,6 @@
 <template>   
   <div>
-    <front-header />
+    <main-header navsel="front"></main-header>
     <div class="component-wrapper container">      
     <div class="hero">
       <img src="@/assets/logo.png" class="logo" style="float:left"> 

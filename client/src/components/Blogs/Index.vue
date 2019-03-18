@@ -1,5 +1,6 @@
 <template>
   <div class="container">    
+    <main-header navsel="back"></main-header>
     <div class="blog-header">
       <h2>ส่วนจัดการบล็อก</h2> 
        <div>
