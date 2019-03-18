@@ -16,7 +16,18 @@
       <p>status: {{ blog.status }}</p> -->    
     </div>
     <div class="back-nav"><button class="btn btn-success" v-on:click="navigateTo('/front')"><i class="fas fa-arrow-left"></i> Back..</button></div>
-    
+    <div class="comment-form-wrapper">
+      <form v-on:submit.prevent="sendComment">
+        <p><textarea rows="5" class="form-control" v-model="comment"></textarea></p>      
+        <p><button type="submit" class="btn btn-primary"><i class="fas fa-comment"></i> Send Comment</button></p>
+      </form>
+    </div>
+    <transition-group tag="ul" name="fade" class="comment-list">
+      <li v-for="comment in comments" :key="comment.id">
+        <h4>{{ comment.userId }}</h4>
+        <p>{{ comment.comment}}</p>
+      </li>        
+    </transition-group>
     <br>
   </div>
 </template>
@@ -24,6 +35,7 @@
 
 import BlogsService from '@/services/BlogsService'
 import UsersService from '@/services/UsersService'
+import {mapState} from 'vuex'
 
 export default {
   data () {
@@ -79,6 +91,12 @@ export default {
         console.log (error)
       } 
     }
+  },
+  computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'user'
+    ])
   }
 }
 </script>
