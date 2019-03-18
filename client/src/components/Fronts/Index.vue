@@ -44,7 +44,7 @@
           <p><strong>Create:</strong> {{ blog.createdAt }}</p>
           <!-- <p>status: {{ blog.status }}</p> -->
           <p>
-            <button class="btn btn-sm btn-info" v-on:click="navigateTo('/blog/'+ blog.id)"><i class="fab fa-readme"></i> View Blog</button> 
+            <button class="btn btn-sm btn-info" v-on:click="navigateTo('/front/read/'+ blog.id)"><i class="fab fa-readme"></i> View Blog</button> 
           </p>
         </div>
         <div class="clearfix"></div>      

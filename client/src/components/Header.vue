@@ -2,7 +2,6 @@
   <div>    
     <front-header v-if="navsel === 'front' "/>
     <back-header v-if="navsel === 'back'" />
-    {{ navsel }}
   </div>
 </template>
 <script>
