@@ -16,26 +16,36 @@
       <p>status: {{ blog.status }}</p> -->    
     </div>
     <div class="back-nav"><button class="btn btn-success" v-on:click="navigateTo('/front')"><i class="fas fa-arrow-left"></i> Back..</button></div>
-    <div class="comment-form-wrapper">
-      <form v-on:submit.prevent="sendComment">
-        <p><textarea rows="5" class="form-control" v-model="comment"></textarea></p>      
-        <p><button type="submit" class="btn btn-primary"><i class="fas fa-comment"></i> Send Comment</button></p>
-      </form>
+    <div class="comments-wrapper">
+      <div class="comment-form-wrapper">
+        <h4>Comments</h4>
+        <form v-on:submit.prevent="sendComment">
+          <p><textarea rows="5" class="form-control" v-model="comment"></textarea></p>
+          <p v-if="user == null">Login / Register for commented.</p>
+          <p v-else ><button type="submit" class="btn btn-primary"><i class="fas fa-comment"></i> Send Comment</button></p>
+        </form>
+      </div>      
+      <transition-group tag="ul" name="fade" class="comment-list">
+        <li v-for="comment in comments" :key="comment.id">
+          <h4>user id: {{comment.userId}}</h4>
+          <p>{{comment.comment}}</p>
+        </li>        
+      </transition-group>
     </div>
-    <transition-group tag="ul" name="fade" class="comment-list">
-      <li v-for="comment in comments" :key="comment.id">
-        <h4>{{ comment.userId }}</h4>
-        <p>{{ comment.comment}}</p>
-      </li>        
-    </transition-group>
+    <transition name="fade">
+      <div v-if="resultUpdated != ''" class="popup-msg">      
+        <p>{{ resultUpdated }}</p>
+      </div>
+    </transition>
     <br>
   </div>
 </template>
 <script>
 
+import {mapState} from 'vuex'
 import BlogsService from '@/services/BlogsService'
 import UsersService from '@/services/UsersService'
-import {mapState} from 'vuex'
+import CommentsService from '@/services/CommentsService'
 
 export default {
   data () {
@@ -60,6 +70,8 @@ export default {
     } catch (error) {
       console.log (error)
     }   
+
+    this.reloadComment()
   },
   methods: {    
     navigateTo (route) {
@@ -74,15 +86,15 @@ export default {
           userId:this.user.id
         }
 
-        // console.log(comment)
+        console.log(comment)
         await CommentsService.post(comment)
-        // reload comments      
+        this.comment = ''
+        this.resultUpdated = "We are recieved" 
+        setTimeout(() => this.resultUpdated = '', 3000)
+        this.reloadComment()  
       } catch (err) {
         console.log(err)
       }
-
-      // reload comment
-      this.reloadComment()
     },
     async reloadComment () {
       try {
@@ -105,6 +117,9 @@ export default {
   list-style: none;  
   padding : 0;
   margin : 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .comment-form-wrapper {
@@ -112,6 +127,28 @@ export default {
   margin-left: auto;
   margin-right: auto;
   margin-top: 30px;
+}
+
+.comment-list li {
+  border:solid 1px #dfdfdf;
+  margin-bottom: 10px;   
+  padding: 10px;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+  border-radius: 5px;
+}
+
+.popup-msg {
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+  border: solid 1px #ddd;
+  background: #fff;
+  max-width:200px;
+  padding: 10px;
+  position:fixed;
+  bottom:0;
+  right:0;  
+  border-radius: 5px;
+  margin-bottom: 5px;
+  margin-right:  5px;
 }
 
 .hero {

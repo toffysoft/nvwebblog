@@ -82,6 +82,16 @@ module.exports = (app) => {
     CommentController.index   
   )
 
+  // get comment by id
+  app.get('/comment/blog/:blogId',
+    CommentController.blog
+  )
+
+  // get comment by id
+  app.get('/comment/user/:userId',
+    CommentController.user
+  )
+
 
   // blog route
   // create blog

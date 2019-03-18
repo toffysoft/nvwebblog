@@ -20,6 +20,8 @@
             <li v-if="!isUserLoggedIn" role="presentation"><a href="#" v-on:click.prevent="showRegister = true" >Register</a></li>
             <transition name="fade">
             <li v-if="isUserLoggedIn" role="presentation"><a href="#">{{user.name}}</a></li>
+            </transition>
+            <transition name="fade">
             <li v-if="isUserLoggedIn" role="presentation"><router-link v-bind:to="{name: 'login'}" >{{user.name}}</router-link></li>
             </transition>
             <li v-if="isUserLoggedIn" role="presentation"><a href="#" v-on:click.prevent="logout">Logout</a></li>
