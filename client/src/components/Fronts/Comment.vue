@@ -16,6 +16,11 @@
         </li>        
       </transition-group>
     </div>
+    <transition name="fade">
+      <div v-if="resultUpdated != ''" class="popup-msg">      
+        <p>{{ resultUpdated }}</p>
+      </div>
+    </transition>
   </div>
 </template>
 <script>
@@ -27,6 +32,7 @@ export default {
     return {
       comment: null,
       comments: '',
+      resultUpdated: '',
     }
   },
   methods: {
@@ -58,15 +64,25 @@ export default {
     }
   },
   created () {
-    console.log(this.blogid)
-    console.log(this.user)
-
-
     this.reloadComment()
   }
 }
 </script>
 <style scoped>
+.popup-msg {
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+  border: solid 1px #ddd;
+  background: #fff;
+  max-width:200px;
+  padding: 10px;
+  position:fixed;
+  bottom:0;
+  right:0;  
+  border-radius: 5px;
+  margin-bottom: 5px;
+  margin-right:  5px;
+}
+
 .comment-list {
   list-style: none;  
   padding : 0;

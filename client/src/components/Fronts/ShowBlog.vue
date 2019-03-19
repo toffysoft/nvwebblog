@@ -17,12 +17,7 @@
         <p>status: {{ blog.status }}</p> -->    
       </div>
       <div class="back-nav"><button class="btn btn-success" v-on:click="navigateTo('/front')"><i class="fas fa-arrow-left"></i> Back..</button></div>    
-      <comment-comp v-bind:blogid="blog.id" v-bind:user="user" ></comment-comp>
-      <transition name="fade">
-        <div v-if="resultUpdated != ''" class="popup-msg">      
-          <p>{{ resultUpdated }}</p>
-        </div>
-      </transition>
+      <comment-comp v-bind:blogid="blog.id" v-bind:user="user" ></comment-comp>      
       <br>
     </div>
   </div>
@@ -36,8 +31,7 @@ import CommentComp from '@/components/Fronts/Comment'
 export default {
   data () {
     return {
-      blog: null,
-      resultUpdated: '',
+      blog: null,      
       users:null,
     }
   },
@@ -69,20 +63,6 @@ export default {
 }
 </script>
 <style scoped>
-.popup-msg {
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
-  border: solid 1px #ddd;
-  background: #fff;
-  max-width:200px;
-  padding: 10px;
-  position:fixed;
-  bottom:0;
-  right:0;  
-  border-radius: 5px;
-  margin-bottom: 5px;
-  margin-right:  5px;
-}
-
 .hero {
   margin-top: 80px;
   border-radius: 5px;
