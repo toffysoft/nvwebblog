@@ -2,7 +2,7 @@ const UserController = require('./controllers/UserController')
 const UserAuthenController = require('./controllers/UserAuthenController')
 const BlogController = require('./controllers/BlogController')
 const CommentController = require('./controllers/CommentController')
-
+const BookController = require('./controllers/BookController')
 
 // authen
 const isAuthenController = require('./authen/isAuthenController')
@@ -171,5 +171,39 @@ module.exports = (app) => {
   app.get('/users',
     isAuthenController,
     UserController.index  
+  )
+
+  // book route
+  // create book
+  app.post('/book',
+    isAuthenController,
+    BookController.create
+  )
+
+  // edit book, suspend, active
+  app.put('/book/:bookId',
+    isAuthenController,
+    BookController.put
+  )
+
+  // delete book
+  app.delete('/book/:bookId',
+    isAuthenController,
+    BookController.remove
+  )
+
+  // get book by id
+  app.get('/book/:bookId',
+    BookController.show
+  )
+
+  // get all book
+  app.get('/books',
+    isAuthenController,
+    BookController.index   
+  )
+
+  app.get('/books/front',
+    BookController.frontIndex   
   )
 }
