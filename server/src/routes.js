@@ -128,6 +128,11 @@ module.exports = (app) => {
   )
 
   // users
+  // get front
+  app.get('/users/front',
+    UserController.getFront
+  )
+  
   // create user
   app.post('/user',
     UserController.create

@@ -16,8 +16,7 @@
         <!-- <p>category: {{ blog.category }}</p>
         <p>status: {{ blog.status }}</p> -->    
       </div>
-      <div class="back-nav"><button class="btn btn-success" v-on:click="navigateTo('/front')"><i class="fas fa-arrow-left"></i> Back..</button></div>    
-      <edit-comment v-on:send-one="onSendOne" v-on:send-two="onSendTwo" ></edit-comment>
+      <div class="back-nav"><button class="btn btn-success" v-on:click="navigateTo('/front')"><i class="fas fa-arrow-left"></i> Back..</button></div>          
       <comment-comp v-bind:blogid="blog.id" v-bind:user="user" ></comment-comp>      
       <br>
     </div>
@@ -29,8 +28,6 @@ import BlogsService from '@/services/BlogsService'
 import UsersService from '@/services/UsersService'
 import CommentComp from '@/components/Fronts/Comment'
 
-import EditComment from '@/components/Fronts/EditComment'
-
 export default {
   data () {
     return {
@@ -40,7 +37,6 @@ export default {
   },
   components : {
     CommentComp,
-    EditComment
   },
   async created () {
     // get blog
@@ -54,12 +50,6 @@ export default {
     }       
   },
   methods: {    
-    onSendOne (dat) {
-      console.log('send one click: ' + dat)
-    },
-    onSendTwo (dat) {
-      console.log('send two click: ' + dat)
-    },
     navigateTo (route) {
       this.$router.push(route)
     }

@@ -10,9 +10,15 @@
         </form>
       </div>      
       <transition-group tag="ul" name="fade" class="comment-list">
-        <li v-for="comment in comments" :key="comment.id">
-          <h4>user id: {{comment.userId}}</h4>
-          <p>{{comment.comment}}</p>
+        <li v-for="comment in comments" :key="comment.id">          
+          <edit-comment 
+            :editable="editState.find(status => status.id === comment.id).status" 
+            :comment="comment" 
+            v-on:comment-part="updatedResult" 
+            v-on:editable-update="updateEditStatus"
+            :user="user" 
+            :users="users"
+            ></edit-comment>          
         </li>        
       </transition-group>
     </div>
@@ -25,6 +31,8 @@
 </template>
 <script>
 import CommentsService from '@/services/CommentsService'
+import EditComment from '@/components/Fronts/EditComment'
+import UsersService from '@/services/UsersService'
 
 export default {
   props:['blogid', 'user'],
@@ -32,13 +40,28 @@ export default {
     return {
       comment: null,
       comments: '',
-      resultUpdated: '',
+      resultUpdated: '',   
+      editState:[]   
     }
   },
+  components: {
+    EditComment
+  },
   methods: {
+    updateEditStatus (commentId) {
+      console.log("state update: " + commentId)
+      this.editState.map((mState) => {
+        if(mState.id === commentId) {
+          mState.status = true
+        } else {
+          mState.status = false
+        }
+      })
+    },
     async reloadComment () {
       try {
-        this.comments = (await CommentsService.blog(this.blogid)).data      
+        this.comments = (await CommentsService.blog(this.blogid)).data 
+        this.comments.map((comment) => {this.editState.push({id:comment.id, status:false})})    
       } catch (error) {
         console.log (error)
       } 
@@ -61,9 +84,34 @@ export default {
       } catch (err) {
         console.log(err)
       }
-    }
+    },
+    updatedResult (result) {
+      // console.log('Hello result:')
+      // console.log(result)
+      // console.log(result)
+
+      if (result === "updated") {
+        this.resultUpdated = "Updated successful."     
+        this.reloadComment()   
+      } else if (result === "deleted") {
+        this.resultUpdated = "Deleted successful."    
+        this.reloadComment()
+      } else {
+        this.resultUpdated = "System have some error."
+      }
+
+      setTimeout(() => this.resultUpdated = '', 3000)
+    },
   },
-  created () {
+  async created () {
+    // get all users
+    try {      
+      this.users = (await UsersService.getFront()).data       
+      // console.log(this.users)
+    } catch (error) {
+      console.log (error)
+    }
+
     this.reloadComment()
   }
 }
