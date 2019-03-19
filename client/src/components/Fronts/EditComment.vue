@@ -1,9 +1,10 @@
 <template>
-  <div id="edit-comment" v-on:click.prevent="editComment(true, comment.id)">
-    <h4>{{ userName }}</h4>
+  <div id="edit-comment">    
+    <h4 v-if="compUser.id === user.id" class="comment-user">{{ compUser.name }}</h4>
+    <h4 v-else>{{ compUser.name }}</h4>
     <hr>
     <transition name="fade">
-      <p v-if="!editable" >{{comment.comment}}</p>   
+      <p v-if="!editable" v-on:click.prevent="editComment(true, comment.id, compUser.id, user.id)" >{{comment.comment}}</p>   
     </transition> 
     <transition name="fade">    
     <div v-if="updateEditable" class="form-edit-wrapper">
@@ -11,7 +12,7 @@
         <p><textarea rows="5" class="form-control" v-model="comment.comment"></textarea></p>
         <p>
           <button type="submit" class="btn btn-warning btn-xs"><i class="fas fa-save"></i> Update</button>
-          <button type="button" v-on:click.prevent="editComment(false, comment.id)" class="btn btn-success btn-xs"><i class="fas fa-times-circle"></i> Close</button>
+          <button type="button" v-on:click.prevent="editComment(false, comment.id, compUser.id, user.id)" class="btn btn-success btn-xs"><i class="fas fa-times-circle"></i> Close</button>
         </p>
       </form>
     </div>
@@ -26,7 +27,8 @@ export default {
   props:['comment', 'users', 'user', 'editable'],
   data () {
     return {
-      userName: null,       
+      // userName: null,  
+      compUser:[]     
     }
   },
   created () {    
@@ -36,22 +38,37 @@ export default {
     getUser () {
       this.users.forEach(user => {
         if (user.id == this.comment.userId) {       
-          this.userName = user.name
+          // this.userName = user.name
+          this.compUser = user
         }
       })
       // console.log('users')
       // console.log(this.users)
     },
-    editComment (status, commentId) {
+    editComment (status, commentId, compId, userId) {
       // check permission first
-      if (this.user != null) {        
-        this.$emit('editable-update', commentId)
+      if (this.user != null) { 
+        if(compId == userId) {    
+          if (status) {   
+            this.$emit('editable-update', commentId)
+          } else {
+            this.$emit('editable-close')
+          }
+        }
       }      
     },
-    updateComment () {
-      this.editable = false
-      let updateResult = "updated"      
-      this.$emit('comment-part', updateResult)
+    async updateComment () {
+      try {
+        await CommentsService.put(this.comment)    
+        this.editable = false
+        let updateResult = "updated"   
+        this.$emit('editable-close')   
+        this.$emit('comment-part', updateResult)    
+      } catch (err) {
+        console.log(err)
+        let updateResult = "error"   
+        this.$emit('comment-part', deleteResult)
+      }      
     },
     async deleteComment (comment) {
      
@@ -80,5 +97,13 @@ export default {
 }
 </script>
 <style scoped>
+.comment-user {
+  background:#888;
+  color:white;
+  border-radius:4px;
+}
+h4{
+  padding: 4px;  
+}
 </style>
 

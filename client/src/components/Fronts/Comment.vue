@@ -16,6 +16,7 @@
             :comment="comment" 
             v-on:comment-part="updatedResult" 
             v-on:editable-update="updateEditStatus"
+            v-on:editable-close="closeEditor"
             :user="user" 
             :users="users"
             ></edit-comment>          
@@ -48,6 +49,9 @@ export default {
     EditComment
   },
   methods: {
+    closeEditor(){
+      this.editState.map((mState) => {mState.status = false})
+    },
     updateEditStatus (commentId) {
       console.log("state update: " + commentId)
       this.editState.map((mState) => {
