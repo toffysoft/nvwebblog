@@ -50,8 +50,22 @@
 </template>
 <script>
 import UsersService from '@/services/UsersService'
+import {mapState} from 'vuex'
 
 export default {
+  computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'user'
+    ]),
+  },
+  mounted () {
+    if (!this.isUserLoggedIn) {
+      this.$router.push({
+        name: 'login'        
+      })
+    }
+  },
   data () {
     return {
       user: {

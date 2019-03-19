@@ -32,8 +32,6 @@ function jwtSignUser (user) {
       const user = await User.findOne({
         where: {
           email: email
-          // password: password
-          // status: 'active'
         }
       })
 
@@ -47,6 +45,12 @@ function jwtSignUser (user) {
       if (!isPasswordValid) {
         return res.status(403).send({
           error: 'User/Password not correct'
+        })
+      }
+
+      if(user.status != "active") {
+        return res.status(403).send({
+          error: 'Your account suspend.'
         })
       }
 
@@ -93,6 +97,12 @@ function jwtSignUser (user) {
       if(user.type != "admin") {
         return res.status(403).send({
           error: 'Permission not correct'
+        })
+      }
+
+      if(user.status != "active") {
+        return res.status(403).send({
+          error: 'Your account suspend.'
         })
       }
 

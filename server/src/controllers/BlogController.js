@@ -19,11 +19,54 @@ module.exports = {
               }
             })),
           },
-          order: [['updatedAt', 'DESC']]
+          order: [['createdAt', 'DESC']]
         })
       } else {
         blogs = await Blog.findAll({
-          order: [['updatedAt', 'DESC']]
+          order: [['createdAt', 'DESC']]
+        })
+      }
+      res.send(blogs)
+    } catch (err) {
+      res.status(500).send({
+        error: 'an error has occured trying to fetch the blogs'
+      })
+    }
+  },
+
+  async frontIndex (req, res) {
+    try {
+      let blogs = null
+      const search = req.query.search
+      console.log('----------> search key: ' + search)
+
+      if (search) {
+        blogs = await Blog.findAll({
+          where: {
+            $or: [
+              'title', 'content', 'category'
+            ].map(key => ({
+              [key]: {
+                $like: `%${search}%`,                
+              }
+            })),
+            $and: [
+              {
+                  status: 
+                  {
+                      $eq: "published"
+                  }
+              }, 
+            ]
+          },
+          order: [['createdAt', 'DESC']]
+        })
+      } else {
+        blogs = await Blog.findAll({
+          where: {
+            'status': 'published'
+          },
+          order: [['createdAt', 'DESC']]
         })
       }
       res.send(blogs)

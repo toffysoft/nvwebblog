@@ -9,7 +9,7 @@
       </p>
       <transition name="fade">
         <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
-          <img :src="BASE_URL+blog.thumbnail" alt="thumbnail">
+          <img class="img-thumbnail" :src="BASE_URL+blog.thumbnail" alt="thumbnail">
         </div>
       </transition>
       <form enctype="multipart/form-data" novalidate>
@@ -31,11 +31,11 @@
       <div>
         <transition-group tag="ul" name="fade" class="pictures">        
           <li v-for="picture in pictures" v-bind:key="picture.id">              
-            <img style="margin-bottom:5px;" :src="BASE_URL+picture.name" alt="picture image">              
-            <br />            
-            <button v-on:click.prevent="delFile(picture)">Delete</button>
-            <button v-on:click.prevent="useThumbnail(picture.name)">Thumbnail</button>
-          </li>
+            <img class="img-thumbnail" style="margin-bottom:5px;" :src="BASE_URL+picture.name" alt="picture image">              
+            <br />  
+            <button class="btn btn-xs btn-info" v-on:click.prevent="useThumbnail(picture.name)">Thumbnail</button>
+            <button class="btn btn-xs btn-danger" v-on:click.prevent="delFile(picture)">Delete</button>
+          </li>        
         </transition-group>
         <div class="clearfix"></div>
       </div>  
@@ -57,6 +57,7 @@
 import BlogsService from '@/services/BlogsService'
 import VueCkeditor from "vue-ckeditor2"
 import UploadService from '@/services/UploadService'
+import {mapState} from 'vuex'
 
 const STATUS_INITIAL = 0,
   STATUS_SAVING = 1,
@@ -64,6 +65,13 @@ const STATUS_INITIAL = 0,
   STATUS_FAILED = 3
 
 export default {
+  mounted () {
+    if (!this.isUserLoggedIn) {
+      this.$router.push({
+        name: 'login'        
+      })
+    }
+  },
   data () {
     return {
       blog: {
@@ -202,6 +210,10 @@ export default {
     VueCkeditor 
   },
   computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'user'
+    ]),
     isInitial() {
       return this.currentStatus === STATUS_INITIAL;
     },
@@ -331,6 +343,7 @@ export default {
 /* thumbnail */
 .thumbnail-pic img{
   width:200px;
+  margin-bottom: 10px;
 }
 
 /* uplaod */

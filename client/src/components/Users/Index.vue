@@ -24,13 +24,18 @@
           <p>ชื่อ-นามสกุล: {{ user.name }} - {{ user.lastname }}</p>
           <p>email: {{ user.email }}</p>
           <!-- <p>password: {{ user.password }}</p> -->
-          <p>สร้างเมื่อ: {{ user.createdAt }}</p>
+          <p>สร้างเมื่อ: {{ user.createdAt | formatedDate}}</p>
           <p>ระดับการใช้งาน: {{ user.type }}</p>
+          <p>สถานะ: {{ user.status }}</p>
           <p>
             <button class="btn btn-sm btn-info" v-on:click="navigateTo('/user/'+ user.id)"><i class="fab fa-readme"></i> View User</button> 
             <button class="btn btn-sm btn-warning" v-on:click="navigateTo('/user/edit/'+ user.id)"><i class="fas fa-edit"></i> Edit User</button>
-            <button class="btn btn-sm btn-danger" v-on:click="deleteUser(user)"><i class="fas fa-trash-alt"></i> Delete</button>
+            <button class="btn btn-sm btn-danger" v-on:click="deleteUser(user)"><i class="fas fa-trash-alt"></i> Delete</button>            
           </p>      
+          <p>
+            <a class="btn btn-danger btn-sm" href="#" v-on:click.prevent="pauseUser(user.id)"><i class="fas fa-pause"></i> Pause</a>&nbsp;
+            <a class="btn btn-success btn-sm" href="#" v-on:click.prevent="activeUser(user.id)"><i class="fas fa-check"></i> Active</a>&nbsp;
+          </p>
         </div>
       </transition-group>
     </div>
@@ -46,11 +51,31 @@
 import UsersService from '@/services/UsersService'
 import _ from 'lodash'
 import ScrollMonitor from 'scrollMonitor'
+import moment from 'moment'
+import {mapState} from 'vuex'
 
 let LOAD_NUM = 2
 let pageWatcher
 
 export default {
+  computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'user'
+    ]),
+  },
+  mounted () {
+    if (!this.isUserLoggedIn) {
+      this.$router.push({
+        name: 'login'        
+      })
+    }
+  },
+  filters: {
+    formatedDate (value) {
+      return moment(String(value)).format('DD-MM-YYYY')
+    },
+  },
   data () {
     return {
       users: [],
@@ -79,13 +104,17 @@ export default {
     '$route.query.search': {
       immediate: true,
       async handler (value) {            
-        this.users = []
-        this.results = []      
-        this.loading = true    
-        this.results = (await UsersService.index(value)).data       
-        this.appendResults()
-        
-        this.search = value                
+        try {
+          this.users = []
+          this.results = []      
+          this.loading = true    
+          this.results = (await UsersService.index(value)).data       
+          this.appendResults()
+          
+          this.search = value   
+        } catch (error) {
+          this.loading = false
+        }             
       }       
     }
   },
@@ -93,6 +122,32 @@ export default {
   //   this.users = (await UsersService.index()).data 
   // },
   methods: {
+    async pauseUser (userId) {
+      let user = {
+        "id": userId,
+        "status":"pause"
+      }
+
+      try {
+        await UsersService.put(user)
+        this.refreshData()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async activeUser (userId) {
+      let user = {
+        "id": userId,
+        "status":"active"
+      }
+
+      try {
+        await UsersService.put(user)
+        this.refreshData()
+      } catch (error) {
+        console.log(error)
+      }
+    },
     appendResults: function () {
       if (this.users.length < this.results.length) {
         let toAppend = this.results.slice(
@@ -134,6 +189,14 @@ export default {
 }
 </script>
 <style scoped>
+.empty-user {
+  width: 100%;
+  text-align: center;
+  padding:10px;
+  background:darksalmon;
+  color:white;
+}
+
 
 .user-list {
   border:solid 1px #dfdfdf;

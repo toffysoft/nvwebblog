@@ -21,7 +21,7 @@
         <p><strong>Comment:</strong></p>
         <p>{{ comment.comment }}</p>
         <!-- <p>password: {{ comment.password }}</p> -->
-        <p>สร้างเมื่อ: {{ comment.createdAt }}</p>
+        <p>สร้างเมื่อ: {{ comment.createdAt | formatedDate}}</p>
         <p>
           <button class="btn btn-sm btn-info" v-on:click="navigateTo('/front/read/'+ comment.blogId)">ดูบล็อกที่ Comment</button>         
           <button class="btn btn-sm btn-danger" v-on:click="deleteComment(comment)">ลบข้อมูล</button>
@@ -40,11 +40,31 @@
 import CommentsService from '@/services/CommentsService'
 import _ from 'lodash'
 import ScrollMonitor from 'scrollMonitor'
+import moment from 'moment'
+import {mapState} from 'vuex'
 
 let LOAD_NUM = 2
 let pageWatcher
 
 export default {
+  computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'user'
+    ]),
+  },
+  mounted () {
+    if (!this.isUserLoggedIn) {
+      this.$router.push({
+        name: 'login'        
+      })
+    }
+  },
+  filters: {
+    formatedDate (value) {
+      return moment(String(value)).format('DD-MM-YYYY')
+    },
+  },
   data () {
     return {
       comments: [],

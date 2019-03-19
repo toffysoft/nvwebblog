@@ -16,8 +16,15 @@
 </template>
 <script>
 import BlogsService from '@/services/BlogsService'
+import {mapState} from 'vuex'
 
 export default {
+  computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'user'
+    ]),
+  },  
   data () {
     return {
       blog: null
@@ -30,6 +37,13 @@ export default {
     } catch (error) {
       console.log (error)
     }   
+  },
+  mounted () {
+    if (!this.isUserLoggedIn) {
+      this.$router.push({
+        name: 'login'        
+      })
+    }
   },
   methods: {
     // navigateTo (route) {

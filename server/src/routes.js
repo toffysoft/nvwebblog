@@ -24,34 +24,39 @@ module.exports = (app) => {
   let upload = multer({ storage: storage }).array("userPhoto", 10)
 
   // upload
-  app.post("/upload", function(req, res) {
-    // isUserAuthenticated,
-    upload(req, res, function(err) {
+  app.post("/upload", 
+    isAuthenController,
+    function(req, res) {    
+      upload(req, res, function(err) {
       if (err) {
         return res.end("Error uploading file.");
 
         }
         res.end("File is uploaded");
       })
-  })
+    }
+  )
 
   //delete file uploaded function
-  app.post('/upload/delete', async function (req, res) {
-    try {
-      const fs = require('fs');      
+  app.post('/upload/delete', 
+    isAuthenController,
+    async function (req, res) {
+      try {
+        const fs = require('fs');      
 
-      console.log(req.body.filename)
-      fs.unlink(process.cwd() + '/public/uploads/' + req.body.filename, (err) => {
-        if (err) throw err;
-        res.send("Delete sucessful")
-        // console.log('successfully deleted material file');
-      });
-    } catch (err) {
-      res.status(500).send({
-        error: 'An error has occured trying to delete file the material'
-      })
+        console.log(req.body.filename)
+        fs.unlink(process.cwd() + '/public/uploads/' + req.body.filename, (err) => {
+          if (err) throw err;
+          res.send("Delete sucessful")
+          // console.log('successfully deleted material file');
+        });
+      } catch (err) {
+        res.status(500).send({
+          error: 'An error has occured trying to delete file the material'
+        })
+      }
     }
-  }),
+  ),
 
 
 
@@ -96,17 +101,20 @@ module.exports = (app) => {
   // blog route
   // create blog
   app.post('/blog',
+    isAuthenController,
     BlogController.create
   )
 
   // edit blog, suspend, active
   app.put('/blog/:blogId',
+    isAuthenController,
     BlogController.put
   )
 
   // delete blog
   app.delete('/blog/:blogId',
-  BlogController.remove
+    isAuthenController,
+    BlogController.remove
   )
 
   // get blog by id
@@ -116,7 +124,12 @@ module.exports = (app) => {
 
   // get all blog
   app.get('/blogs',
+    isAuthenController,
     BlogController.index   
+  )
+
+  app.get('/blogs/front',
+    BlogController.frontIndex   
   )
 
   // authen
@@ -145,6 +158,7 @@ module.exports = (app) => {
 
   // delete user
   app.delete('/user/:userId',
+    isAuthenController,
     UserController.remove
   )
 

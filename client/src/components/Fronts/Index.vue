@@ -41,7 +41,7 @@
         <div v-html="blog.content.slice(0,200) + '...'"></div>      
         <div class="blog-info">
           <p><strong>Category:</strong> {{ blog.category }}</p>
-          <p><strong>Create:</strong> {{ blog.createdAt }}</p>
+          <p><strong>Create:</strong> {{ blog.createdAt | formatedDate }}</p>
           <!-- <p>status: {{ blog.status }}</p> -->
           <p>
             <button class="btn btn-sm btn-info" v-on:click="navigateTo('/front/read/'+ blog.id)"><i class="fab fa-readme"></i> View Blog</button> 
@@ -64,11 +64,17 @@
 import BlogsService from '@/services/BlogsService'
 import _ from 'lodash'
 import ScrollMonitor from 'scrollMonitor'
+import moment from 'moment'
 
 let LOAD_NUM = 3
 let pageWatcher
 
 export default {
+  filters: {
+    formatedDate (value) {
+      return moment(String(value)).format('DD-MM-YYYY')
+    },
+  },
   watch: {  
     search: _.debounce(async function (value) {
       const route = {
@@ -91,7 +97,7 @@ export default {
         this.blogs = []
         this.results = []      
         this.loading = true    
-        this.results = (await BlogsService.index(value)).data       
+        this.results = (await BlogsService.frontIndex(value)).data       
         this.appendResults()
 
         this.results.forEach(blog => {       

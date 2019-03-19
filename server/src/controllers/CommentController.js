@@ -20,11 +20,11 @@ module.exports = {
             }
           })),
         },
-        order: [['updatedAt', 'DESC']]
+        order: [['createdAt', 'DESC']]
       })
     } else {
       comments = await Comment.findAll({
-        order: [['updatedAt', 'DESC']]
+        order: [['createdAt', 'DESC']]
       })
     }
     res.send(comments)

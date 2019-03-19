@@ -59,6 +59,7 @@
 import BlogsService from '@/services/BlogsService'
 import UploadService from '@/services/UploadService'
 import VueCkeditor from "vue-ckeditor2"
+import {mapState} from 'vuex'
 
 const STATUS_INITIAL = 0,
   STATUS_SAVING = 1,
@@ -217,6 +218,10 @@ export default {
   },
 
   computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'user'
+    ]),
     isInitial() {
       return this.currentStatus === STATUS_INITIAL;
     },
@@ -232,6 +237,12 @@ export default {
   },
 
   async mounted () {
+    if (!this.isUserLoggedIn) {
+      this.$router.push({
+        name: 'login'        
+      })
+    }
+
     try {      
       let blogId = this.$route.params.blogId
       this.blog = (await BlogsService.show(blogId)).data 
@@ -383,9 +394,6 @@ ul.pictures li img {
   margin-right: 20px;
 }
 
-.clearfix {
-  clear: both;
-}
 /* uplaod */
 .dropbox {
   outline: 2px dashed grey; /* the dash box */

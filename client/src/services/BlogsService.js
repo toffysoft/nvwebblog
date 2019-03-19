@@ -8,6 +8,15 @@ export default {
       }
     })
   },
+
+  frontIndex (search) {    
+    return Api().get('blogs/front', {
+      params: {
+        search: search
+      }
+    })
+  },
+
   show (blogId) {
     return Api().get('blog/'+blogId)
   },
