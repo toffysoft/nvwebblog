@@ -19,6 +19,12 @@ import BlogCreate from '@/components/Blogs/CreateBlog'
 import BlogEdit from '@/components/Blogs/EditBlog'
 import BlogShow from '@/components/Blogs/ShowBlog'
 
+// Books
+import BookIndex from '@/components/Books/Index'
+import BookCreate from '@/components/Books/CreateBook'
+import BookEdit from '@/components/Books/EditBook'
+import BookShow from '@/components/Books/ShowBook'
+
 // Upload Testing
 import Upload from '@/components/Utils/Upload'
 
@@ -70,6 +76,28 @@ export default new Router({
       path: '/blog/:blogId',
       name: 'blog',
       component: BlogShow
+    },
+
+    // books
+    {
+      path: '/books',
+      name: 'books',
+      component: BookIndex
+    },
+    {
+      path: '/book/create',
+      name: 'books-edit',
+      component: BookCreate
+    },
+    {
+      path: '/book/edit/:bookId',
+      name: 'book-edit',
+      component: BookEdit
+    },
+    {
+      path: '/book/:bookId',
+      name: 'book',
+      component: BookShow
     },
 
     // comments
