@@ -9,7 +9,8 @@
       <!-- <p>category: {{ blog.category }}</p>
       <p>status: {{ blog.status }}</p> -->    
     </div>
-    <div class="back-nav"><button class="btn btn-success" v-on:click="navigateTo('/blogs')"><i class="fas fa-arrow-left"></i> Back..</button></div>
+    <!-- <div class="back-nav"><button class="btn btn-success" v-on:click="navigateTo('/blogs')"><i class="fas fa-arrow-left"></i> Back..</button></div> -->
+    <div class="back-nav"><router-link class="btn btn-success" :to="{name: 'blogs'}" ><i class="fas fa-arrow-left"></i> Back..</router-link></div>
     <br>
   </div>
 </template>
@@ -31,9 +32,9 @@ export default {
     }   
   },
   methods: {
-    navigateTo (route) {
-      this.$router.push(route)
-    },
+    // navigateTo (route) {
+    //   this.$router.push(route)
+    // },
   }
 }
 </script>
