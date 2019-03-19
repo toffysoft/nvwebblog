@@ -1,5 +1,6 @@
 <template>
   <div class="container blog-wrapper">
+    <main-header navsel="back"></main-header>
     <h1>Create Blog</h1>
     <form v-on:submit.prevent = "createBlog">
       <p>
@@ -48,7 +49,8 @@
         <button class="btn btn-success" type="submit">Create Blog</button>
         <button class="btn btn-default" type="button" v-on:click="navigateTo('/blogs')">Back</button>
       </p> 
-    </form>       
+    </form>   
+    <br>    
   </div>
 </template>
 <script>

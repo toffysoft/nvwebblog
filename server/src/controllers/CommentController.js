@@ -2,16 +2,38 @@ const {Comment} = require('../models')
 
 module.exports = {
  // get all comment
+ // index with serach comment
  async index (req, res) {
-   try {
-       const comments = await Comment.findAll()
-       res.send(comments)
-   } catch (err){
-       res.status(500).send({
-           error: 'The comments information was incorrect'
-       })
-   }
- },
+  try {
+    let comments = null
+    const search = req.query.search
+    console.log('----------> search key: ' + search)
+
+    if (search) {
+      comments = await Comment.findAll({
+        where: {
+          $or: [
+            'comment'
+          ].map(key => ({
+            [key]: {
+              $like: `%${search}%`,                
+            }
+          })),
+        },
+        order: [['updatedAt', 'DESC']]
+      })
+    } else {
+      comments = await Comment.findAll({
+        order: [['updatedAt', 'DESC']]
+      })
+    }
+    res.send(comments)
+  } catch (err) {
+    res.status(500).send({
+      error: 'an error has occured trying to fetch the comments'
+    })
+  }
+},
 
  // create comment
  async create (req, res) {

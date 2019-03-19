@@ -23,7 +23,7 @@
         <!-- <p>password: {{ comment.password }}</p> -->
         <p>สร้างเมื่อ: {{ comment.createdAt }}</p>
         <p>
-          <button class="btn btn-sm btn-info" v-on:click="navigateTo('/comment/'+ comment.id)">ดูบล็อกที่ Comment</button>         
+          <button class="btn btn-sm btn-info" v-on:click="navigateTo('/front/read/'+ comment.blogId)">ดูบล็อกที่ Comment</button>         
           <button class="btn btn-sm btn-danger" v-on:click="deleteComment(comment)">ลบข้อมูล</button>
         </p>      
       </div>

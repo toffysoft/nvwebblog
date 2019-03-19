@@ -1,5 +1,6 @@
 <template>
   <div>
+    <main-header navsel="back"></main-header>
     <div class="user-header container">
       <h2>ส่วน</h2>
       <div>
@@ -19,8 +20,7 @@
     </div>    
     <div class="container">
       <transition-group name="fade">
-        <div v-for="user in users" v-bind:key="user.id" class="user-list container">
-          <p>id: {{ user.id }}</p>
+        <div v-for="user in users" v-bind:key="user.id" class="user-list container">          
           <p>ชื่อ-นามสกุล: {{ user.name }} - {{ user.lastname }}</p>
           <p>email: {{ user.email }}</p>
           <!-- <p>password: {{ user.password }}</p> -->

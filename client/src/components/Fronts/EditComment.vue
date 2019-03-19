@@ -17,7 +17,8 @@
       </form>
     </div>
     </transition>
-    <p v-if="!editable && user != null"><button v-on:click="deleteComment(comment)" class="btn btn-xs btn-danger"><i class="fas fa-trash-alt"></i> Delete</button></p>
+    <p v-if="!editable && user != null && compUser.id === user.id"><button v-on:click="deleteComment(comment)" class="btn btn-xs btn-danger"><i class="fas fa-trash-alt"></i> Delete</button></p>
+    <p v-else-if="user.type === 'admin'"><button v-on:click="deleteComment(comment)" class="btn btn-xs btn-danger"><i class="fas fa-trash-alt"></i> Delete</button></p>
   </div>
 </template>
 <script>
