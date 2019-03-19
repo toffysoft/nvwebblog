@@ -1,6 +1,6 @@
 <template>
   <div id="edit-comment">    
-    <h4 v-if="compUser.id === user.id" class="comment-user">{{ compUser.name }}</h4>
+    <h4 v-if="user && compUser.id === user.id" class="comment-user">{{ compUser.name }}</h4>
     <h4 v-else>{{ compUser.name }}</h4>
     <hr>
     <transition name="fade">
