@@ -148,7 +148,7 @@ export default {
         this.books = []
         this.results = []      
         this.loading = true    
-        this.results = (await BooksService.index(value)).data       
+        this.results = (await BooksService.frontIndex(value)).data       
         this.appendResults()
 
         this.results.forEach(book => {       
@@ -267,7 +267,7 @@ export default {
     },
   },
   async created () {    
-    let allBooks = (await BooksService.index()).data
+    let allBooks = (await BooksService.frontIndex()).data
     this.newBooks = allBooks.slice(0,4)
   },
   updated () {
