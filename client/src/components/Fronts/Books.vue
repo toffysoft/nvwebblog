@@ -4,7 +4,7 @@
     <div class="component-wrapper container">      
       <div class="hero">
         <img src="@/assets/logonode.png" class="logo" style="float:left"> 
-        <h1>ร้านหนังสือออนไลน์ สั่งซื่อได้เลยครับ</h1>
+        <h1>ร้าน Ebook สั่งซื่อได้เลยครับ</h1>
         <p>By Gooddev.ME</p>      
       </div>
       <div class="clearfix"></div>
@@ -88,8 +88,8 @@
               {{ cart.booktitle }} จำนวน {{ cart.qty}} x {{ cart.prices }}
             </div>            
             <div>
-              <button v-on:click.prevent="inc(cart)">+</button> 
-              <button v-on:click.prevent="dec(cart)">-</button>
+              <button v-on:click.prevent="inc(cart)" class="btn btn-default btn-xs">&nbsp;+&nbsp;</button> 
+              <button v-on:click.prevent="dec(cart)" class="btn btn-default btn-xs">&nbsp;-&nbsp;</button>
             </div>
           </li>
         </ul>
@@ -103,6 +103,7 @@
 <script>
 
 import BooksService from '@/services/BooksService'
+import BuysService from '@/services/BuysService'
 import _ from 'lodash'
 import ScrollMonitor from 'scrollMonitor'
 import moment from 'moment'
@@ -186,8 +187,17 @@ export default {
   // },
   methods: { 
     sendBuy () {
-      this.carts.forEach((cart) => {
+      this.carts.forEach(async (cart) => {
         console.log("cart: " + JSON.stringify(cart))
+
+        try {
+          await BuysService.post(cart)
+          this.$router.push({
+            name: 'cartlist'
+          })
+        } catch (err) {
+          console.log(err)
+        }
       })
     },
     inc (item) {
@@ -222,11 +232,14 @@ export default {
           let cart = {
             bookid:book.id,
             userid:this.user.id,
+            email:this.user.email,
             qty:1,
             booktitle:book.title,
             username:this.user.name,
             userlastname:this.user.lastname,
-            prices:book.prices
+            prices:book.prices,
+            clientStatus:"รอชำระ",
+            shopStatus:"รอส่ง",
           }
           this.carts.push(cart)
         }

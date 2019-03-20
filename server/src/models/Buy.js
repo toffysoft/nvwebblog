@@ -3,10 +3,13 @@ module.exports = (sequelize, DataTypes) => {
     bookid: DataTypes.STRING,
     userid: DataTypes.STRING,
     qty: DataTypes.STRING,
-    status: DataTypes.STRING,
+    email: DataTypes.STRING,
+    clientStatus: DataTypes.STRING,
+    shopStatus: DataTypes.STRING,
     booktitle: DataTypes.STRING,
     username: DataTypes.STRING,     
-    userlastname: DataTypes.STRING,     
+    userlastname: DataTypes.STRING,
+    prices: DataTypes.STRING
   })
 
   return Buy

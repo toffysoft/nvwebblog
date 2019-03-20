@@ -8,10 +8,13 @@ export default {
       }
     })
   },
-  post (buy) {
-    return Api().post('buy', buy)
+  post (book) {
+    return Api().post('buy', book)
   },
-  put (buy) {
-    return Api().put('buy/'+buy.id, buy)
+  put (book) {
+    return Api().put('buy/'+book.id, book)
   },
+  user(userid) {
+    return Api().get('buy/user/'+userid)
+  }
 }

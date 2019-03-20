@@ -9,7 +9,7 @@
           </a>
           <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol-1">
             <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span><span class="icon-bar"></span>
+            <span class="icon-bar"></span><span class="icon-bar"></span>front-cartlist
             <span class="icon-bar"></span>
           </button>
         </div>
@@ -20,7 +20,7 @@
             <li v-if="!isUserLoggedIn" role="presentation"><a href="#" v-on:click.prevent="showLogin = true" >Login</a></li>
             <li v-if="!isUserLoggedIn" role="presentation"><a href="#" v-on:click.prevent="showRegister = true" >Register</a></li>
             <transition name="fade">
-            <li v-if="isUserLoggedIn" role="presentation"><a href="#">{{user.name}}</a></li>
+            <li v-if="isUserLoggedIn" role="presentation"><router-link :to="{name: 'cartlist'}" ><i class="fas fa-user"></i> {{user.name}}</router-link></li>
             </transition>            
             <li v-if="isUserLoggedIn" role="presentation"><a href="#" v-on:click.prevent="logout">Logout</a></li>
           </ul>
@@ -137,12 +137,15 @@ export default {
     ]),
   },
   methods: {
+    navigateTo (route) {
+      this.$router.push(route)
+    },
     logout () {
       this.$store.dispatch('setToken', null)
       this.$store.dispatch('setUser', null)
-      // this.$router.push({
-      //   name: 'login'
-      // })
+      this.$router.push({
+        name: 'front'
+      })
       this.resultUpdated = "Logout successful."
       setTimeout(() => this.resultUpdated = '', 5000)
     },
@@ -160,6 +163,7 @@ export default {
         this.error = error.response.data.error
         setTimeout(() => this.error = '', 5000)
       }
+
     },
     async clientLogin () {
       console.log(`acc: ${this.email} -${this.password}`)
@@ -183,7 +187,6 @@ export default {
         this.showLogin = false
         this.resultUpdated = "Login successful."
         setTimeout(() => this.resultUpdated = '', 5000)
-
         
       } catch (error) {
         console.log(error)      

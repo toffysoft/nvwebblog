@@ -225,4 +225,9 @@ module.exports = (app) => {
     isAuthenController,
     BuyController.index   
   )
+
+  // get all buy
+  app.get('/buy/user/:userid',    
+    BuyController.user   
+  )
 }
