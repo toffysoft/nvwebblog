@@ -60,7 +60,4 @@ export default {
 a.router-link-active{
   color:yellowgreen !important;
 } 
-.clearfix {
-  clear: left;
-}
 </style>

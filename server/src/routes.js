@@ -3,6 +3,7 @@ const UserAuthenController = require('./controllers/UserAuthenController')
 const BlogController = require('./controllers/BlogController')
 const CommentController = require('./controllers/CommentController')
 const BookController = require('./controllers/BookController')
+const BuyController = require('./controllers/BuyController')
 
 // authen
 const isAuthenController = require('./authen/isAuthenController')
@@ -199,11 +200,29 @@ module.exports = (app) => {
 
   // get all book
   app.get('/books',
-    isAuthenController,
     BookController.index   
   )
 
   app.get('/books/front',
     BookController.frontIndex   
+  )
+
+  // buy route
+  // create buy
+  app.post('/buy',
+    isAuthenController,
+    BuyController.create
+  )
+
+  // edit buy, suspend, active
+  app.put('/buy/:buyId',
+    isAuthenController,
+    BuyController.put
+  )
+
+  // get all buy
+  app.get('/buys',
+    isAuthenController,
+    BuyController.index   
   )
 }

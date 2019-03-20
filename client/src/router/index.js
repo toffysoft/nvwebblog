@@ -31,6 +31,8 @@ import Upload from '@/components/Utils/Upload'
 // Front
 import FrontIndex from '@/components/Fronts/Index'
 import FrontShow from '@/components/Fronts/ShowBlog'
+import FrontBooks from '@/components/Fronts/Books'
+import FrontViewBook from '@/components/Fronts/ViewBookMore'
 
 Vue.use(Router)
 
@@ -48,6 +50,21 @@ export default new Router({
       name: 'front-read',
       component: FrontShow
     },
+    {
+      path: '/front-books',
+      name: 'front-books',
+      component: FrontBooks
+    },
+    {
+      path: '/front-view-book/:bookId',
+      name: 'front-view-books',
+      component: FrontViewBook
+    },
+    // {
+    //   path: '/front/view/:blogId',
+    //   name: 'front-view',
+    //   component: FrontShow
+    // },
     
     // upload testing
     {
@@ -135,6 +152,10 @@ export default new Router({
       path: '/user/:userId',
       name: 'user',
       component: UserShow
-    },    
+    },  
+    {
+      path: '*',
+      redirect: '/front'
+    }  
   ]
 })

@@ -27,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     lastname: DataTypes.STRING,
     status: DataTypes.STRING,
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    address: DataTypes.TEXT
   },{
     hooks: {
       beforeCreate: hashPassword,

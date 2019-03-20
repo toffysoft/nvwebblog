@@ -15,7 +15,8 @@
         </div>
         <div class="collapse navbar-collapse" id="navcol-1">
           <ul class="nav navbar-nav navbar-right">
-            <li role="presentation"><router-link :to="{name: 'front'}" ><i class="fas fa-home"></i> Home</router-link></li>        
+            <li role="presentation"><router-link :to="{name: 'front'}" ><i class="fas fa-home" ></i> Home</router-link></li>
+            <li role="presentation"><router-link :to="{name: 'front-books'}" ><i class="fas fa-book-open"></i> Books</router-link></li>          
             <li v-if="!isUserLoggedIn" role="presentation"><a href="#" v-on:click.prevent="showLogin = true" >Login</a></li>
             <li v-if="!isUserLoggedIn" role="presentation"><a href="#" v-on:click.prevent="showRegister = true" >Register</a></li>
             <transition name="fade">
@@ -196,6 +197,9 @@ export default {
 }
 </script>
 <style scoped>
+a.router-link-active {
+  color:turquoise !important;
+} 
 .error {
   color: red;
   text-align: center;

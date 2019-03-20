@@ -1,17 +1,29 @@
 <template>   
-  <div id="front">
+  <div>
     <main-header navsel="front"></main-header>
     <div class="component-wrapper container">      
     <div class="hero">
-      <img src="@/assets/logo.png" class="logo" style="float:left"> 
-      <h1>Webblog from nodejs + vuejs Ebook</h1>
+      <img src="@/assets/logonode.png" class="logo" style="float:left"> 
+      <h1>ร้านหนังสือออนไลน์ สั่งซื่อได้เลยครับ</h1>
       <p>By Gooddev.ME</p>      
     </div>
     <div class="clearfix"></div>
-    <div class="blog-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1>หนังสือมาใหม่</h1>
+          <ul>
+            <li v-for="book in newBooks" v-bind:key="book.id">
+              <p>{{ book.title }}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="book-header">
       <div>
         <form class="form-inline form-search">             
-          <span><strong> จำนวน blog: </strong> {{results.length}} </span>
+          <span><strong> จำนวน book: </strong> {{results.length}} </span>
           &nbsp;    
           <div class="form-group">              
             <div class="input-group">                        
@@ -28,40 +40,40 @@
       <div class="clearfix"></div>   
     </div>    
     <transition-group name="fade">
-      <div v-for="blog in blogs" v-bind:key="blog.id" class="blog-list">
-        <!-- <p>id: {{ blog.id }}</p> -->
-        <div class="blog-pic">
+      <div v-for="book in books" v-bind:key="book.id" class="book-list">
+        <!-- <p>id: {{ book.id }}</p> -->
+        <div class="book-pic">
           <!-- <transition name="fade"> -->
-            <div class="thumbnail-pic" v-if="blog.thumbnail != 'null'">
-              <img :src="BASE_URL+blog.thumbnail" alt="thumbnail">
+            <div class="thumbnail-pic" v-if="book.thumbnail != 'null'">
+              <img :src="BASE_URL+book.thumbnail" alt="thumbnail">
             </div>
           <!-- </transition>   -->
         </div>
-        <h3>{{ blog.title }}</h3>
-        <div v-html="blog.content.slice(0,200) + '...'"></div>      
-        <div class="blog-info">
-          <p><strong>Category:</strong> {{ blog.category }}</p>
-          <p><strong>Create:</strong> {{ blog.createdAt | formatedDate }}</p>
-          <!-- <p>status: {{ blog.status }}</p> -->
+        <h3>{{ book.title }}</h3>
+        <div v-html="book.content.slice(0,200) + '...'"></div>      
+        <div class="book-info">
+          <p><strong>Category:</strong> {{ book.category }}</p>
+          <p><strong>Create:</strong> {{ book.createdAt | formatedDate }}</p>
+          <!-- <p>status: {{ book.status }}</p> -->
           <p>
-            <button class="btn btn-sm btn-info" v-on:click="navigateTo('/front/read/'+ blog.id)"><i class="fab fa-readme"></i> View Blog</button> 
+            <button class="btn btn-sm btn-info" v-on:click="navigateTo('/front/read/'+ book.id)"><i class="fab fa-readme"></i> View Book</button> 
           </p>
         </div>
         <div class="clearfix"></div>      
       </div>
     </transition-group>
-    <div v-if="blogs.length === 0 && loading === false" class="empty-blog">
+    <div v-if="books.length === 0 && loading === false" class="empty-book">
         *** ไม่มีข้อมูล ***
     </div>
-    <div id="blog-list-bottom">
-      <div class="blog-load-finished" v-if="blogs.length === results.length && results.length > 0">โหลดข้อมูลครบแล้ว</div>
+    <div id="book-list-bottom">
+      <div class="book-load-finished" v-if="books.length === results.length && results.length > 0">โหลดข้อมูลครบแล้ว</div>
     </div>
   </div>
   </div>
 </template>
 <script>
 
-import BlogsService from '@/services/BlogsService'
+import BooksService from '@/services/BooksService'
 import _ from 'lodash'
 import ScrollMonitor from 'scrollMonitor'
 import moment from 'moment'
@@ -78,7 +90,7 @@ export default {
   watch: {  
     search: _.debounce(async function (value) {
       const route = {
-        name: 'front'
+        name: 'front-books'
       }
 
       if(this.search !== '') {
@@ -94,21 +106,21 @@ export default {
     '$route.query.search': {
       immediate: true,
       async handler (value) {            
-        this.blogs = []
+        this.books = []
         this.results = []      
         this.loading = true    
-        this.results = (await BlogsService.frontIndex(value)).data       
+        this.results = (await BooksService.index(value)).data       
         this.appendResults()
 
-        this.results.forEach(blog => {       
+        this.results.forEach(book => {       
           if (this.category.length > 0) {
-            // console.log(this.category.indexOf(blog.category))
-            if(this.category.indexOf(blog.category) === -1) {
-              this.category.push(blog.category)
+            // console.log(this.category.indexOf(book.category))
+            if(this.category.indexOf(book.category) === -1) {
+              this.category.push(book.category)
             }
           } else {
             
-            this.category.push(blog.category)
+            this.category.push(book.category)
           }
         })  
         this.loading = false
@@ -119,40 +131,41 @@ export default {
   },
   data () {
     return {
-      blogs: [],
+      books: [],
       BASE_URL: "http://localhost:8081/assets/uploads/",
       search: '',
       results: [],
       category: [],
       loading: false,
+      newBooks: []
     }
   },
-  // async created () {
-  //   this.blogs = (await BlogsService.index()).data 
+  // async updated () {
+  //   this.newBooks = this.results.slice(0,5)
   // },
   methods: { 
     appendResults: function () {
-      if (this.blogs.length < this.results.length) {
+      if (this.books.length < this.results.length) {
         let toAppend = this.results.slice(
-          this.blogs.length,
-          LOAD_NUM + this.blogs.length
+          this.books.length,
+          LOAD_NUM + this.books.length
         )
-        this.blogs = this.blogs.concat(toAppend)
+        this.books = this.books.concat(toAppend)
       }
     },   
     navigateTo (route) {
       this.$router.push(route)
     },
-    async deleteBlog (blog) {
+    async deleteBook (book) {
       try {
-        await BlogsService.delete(blog)
+        await BooksService.delete(book)
         this.refreshData()
       } catch (err) {
         console.log(err)
       }
     },
     async refreshData() {
-      this.blogs = (await BlogsService.index()).data
+      this.books = (await BooksService.index()).data
     },
     setCategory (keyword) {  
       if(keyword === ' '){        
@@ -164,7 +177,10 @@ export default {
     },
   },
   updated () {
-    let sens = document.querySelector('#blog-list-bottom')
+    // this.newBooks = this.results.slice(0,4)
+    // console.log('results on updated: ' + this.results)
+
+    let sens = document.querySelector('#book-list-bottom')
     pageWatcher = ScrollMonitor.create(sens)
     pageWatcher.enterViewport(this.appendResults)
   },
@@ -181,7 +197,7 @@ export default {
 .hero {
   margin-top: 80px;
   border-radius: 5px;
-  background: darkcyan;
+  background:lightslategray;
   height:250px;
   color:white;
   padding: 20px;
@@ -189,11 +205,13 @@ export default {
 
 .hero h1 {
   margin-top: 30px;
+  font-family: 'kanit';
 }
 .logo {
   padding-right: 20px;
+  max-width: 200px;
 }
-.empty-blog {
+.empty-book {
   width: 100%;
   text-align: center;
   padding:10px;
@@ -209,34 +227,31 @@ export default {
   margin: 10px 10px 0px 0px;
 }
 
-.blog-info {
+.book-info {
   float: left;
 }
 
-.blog-pic {
+.book-pic {
   float: left;
 }
 
-.clearfix {
-  clear: both;
-}
 
-.blog-list {
+.book-list {
   border:solid 1px #dfdfdf;
   margin-bottom: 10px;
   padding: 5px;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
 }
 
-.blog-header {
+.book-header {
   margin-top: 80px;
 }
 
-#blog-list-bottom{
+#book-list-bottom{
   padding-top:4px;
 }
 
-.blog-load-finished{
+.book-load-finished{
   padding:4px;
   text-align: center;
   background: seagreen;
@@ -267,7 +282,7 @@ export default {
   color: white
 }
 
-.create-blog {
+.create-book {
   margin-top: 10px;
 }
 

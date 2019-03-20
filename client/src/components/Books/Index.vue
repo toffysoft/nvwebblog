@@ -22,7 +22,7 @@
         <li class="clear" ><a v-on:click.prevent="setCategory(' ')" href="#">Clear</a></li>
       </ul>
       <div class="clearfix"></div>   
-    </div>    
+    </div>        
     <div class="container">
       <transition-group name="fade">
         <div v-for="book in books" v-bind:key="book.id" class="book-list">
